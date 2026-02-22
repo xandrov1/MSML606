@@ -68,8 +68,40 @@ with open("p2_traversals.csv", "r") as file: # Open file
         actual_infix.append(row[2])
         actual_postfix.append(row[3])
 
+def preOrder_traversal(root): 
+    if root is None: # Base case 
+        return [] 
+        
+    # Returning a list instead of using a global list 
+    return [root.data] + preOrder_traversal(root.left) + preOrder_traversal(root.right) # Concatenates current, left subtree values and right subtree values 
+    # Root -> left -> right
 
+def inOrder_traversal(root): 
+    if root is None: 
+        return [] 
+    
+    # Returning list 
+    return inOrder_traversal(root.left) + [root.data] + inOrder_traversal(root.right) 
+    # Left -> root -> right
 
+def postOrder_traversal(root): 
+    if root is None: 
+        return [] 
+
+    # Returning list 
+    return postOrder_traversal(root.left) + postOrder_traversal(root.right) + [root.data] 
+    # Left -> right -> root
+
+for i, root in enumerate(roots_p2):
+    # Join list returned by traversal lists into one 
+    prefix = "".join(preOrder_traversal(root)) 
+    infix = "".join(inOrder_traversal(root))
+    postfix = "".join(postOrder_traversal(root))
+
+    # Compare lists to expected values
+    assert prefix == actual_prefix[i], f"Prefix mismatch at row {i}"
+    assert infix == actual_infix[i], f"Infix mismatch at row {i}"
+    assert postfix == actual_postfix[i], f"Postfix mismatch at row {i}"
 
 
 
