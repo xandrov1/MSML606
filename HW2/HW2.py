@@ -100,7 +100,13 @@ for i, root in enumerate(roots_p2):
     prefix = ",".join(preOrder_traversal(root)) # with commas in between!!!
     infix = ",".join(inOrder_traversal(root))
     postfix = ",".join(postOrder_traversal(root))
-    print(infix)
+
+    # CHange to print 
+    # input: 4,5,6,6/*....
+    # actual vs expected:
+    # prefix output
+    # infix output
+    # postfix output
 
     # Compare lists to expected values
     assert prefix == actual_prefix[i], f"Prefix mismatch at row {i}"
