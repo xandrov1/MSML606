@@ -131,22 +131,35 @@ class Stack:
 
         for token in exp.split(): # For each character in the expression string input
             if token in "+-/*":
-                # Maintain correct left/right operand order
-                b = s.pop() # Last element is second in expression 
-                a = s.pop() # Fisrt element in expression
-                # Handle every operator
-                if token == "+":
-                    s.push(a + b)
-                elif token == "-":
-                    s.push(a - b)
-                elif token == "*":
-                    s.push(a * b)
-                elif token == "/":
-                    if b == 0: # Handle division by 0
-                        raise ZeroDivisionError("Division by zero")
-                    s.push(a / b)
+                try:
+                    # Maintain correct left/right operand order
+                    b = s.pop() # Last element is second in expression 
+                    a = s.pop() # Fisrt element in expression
+                    # Handle every operator
+                    if token == "+":
+                        s.push(a + b)
+                    elif token == "-":
+                        s.push(a - b)
+                    elif token == "*":
+                        s.push(a * b)
+                    elif token == "/":
+                        if b == 0: # Handle division by 0. Passes through index error check too
+                            raise ZeroDivisionError("Division by zero")
+                        s.push(a / b) # No division by 0 so move on
+                except IndexError: # If not enough operants IndexError is thrown by pop operations
+                    raise ValueError("Not enough operands") # Raise error
             else:
-                s.push(float(token)) # Convert numbers to float when pushing them
+                try:
+                    s.push(float(token)) # Convert numbers to float when pushing them. No need to worry about negative numbers they simply get evaluated cause Python
+                    # According to format of input (only space separated operands) a negative number would be like "-6" and that checks
+                except ValueError: # Except invalid tokens like characters other than numbers or operators
+                    raise ValueError("Invalid token in evaluating the expression")
+                
+        # TOO many operands
+        if s.top > 0: # Check index of top, if > 0 too many operands left in stack
+            raise ValueError("Too many operands, malformed postfix expression")
+        elif s.top < 0: # if top < 0 there was no operands
+            raise ValueError("Empty input")
 
         return s.pop()
 
