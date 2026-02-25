@@ -111,6 +111,68 @@ for i, root in enumerate(roots_p2):
     print(f"Actual infix output: {infix}")
     print(f"Actual postfix output: {postfix}\n")
 
+print("********************************************\n")
 
 
+# Problem 3. Evaluate a postfix expression using a stack. That is, implement a function that
+# evaluates a postfix expression without constructing an expression tree.
+# Requirements:
+# ➢ Accept postfix expressions as space-separated strings (unlike comma-separated in
+# Problem 1)
+# ➢ Implement your stack using either an array or a list (i.e., implement the functions based
+# on the Stack ADT we covered in class)
+#   ○ Constraints: You may use Python’s list structure as the underlying storage. While
+#   you can use .append() to add elements, please ensure the implementation strictly
+#   follows the logic we discussed in class (e.g., manually managing the "top" of the stack.
+#   ○ Use your own stack implementation to solve problem 3
+# ➢ Support operators: +, -, *, and /
+# ➢ Return the numeric result of the evaluation
+# ➢ Handle division by zero appropriately (e.g., raise a ZeroDivisionError or handle it so that
+# the test case catches the error)
+
+class Stack:
+    def __init__(self):
+        self.data = [] # List to contain elements
+        self.top = -1 # Index of top element of stack (starts at -1 cause list is empty at this initialization)
+
+    def push(self, value): # Push function
+        self.top += 1 # Update index of top
+        self.data.append(value) # Uses append from python lists kinda cheap
+
+    def pop(self):
+        if self.top == -1: # Check stack isn't empty
+            raise IndexError("Empty stack") # Throw error
+        
+        self.top -= 1 # Update index of top
+        return self.data.pop()
+
+def postfixExpressionCalculator(stringy):
+    s = Stack()
+    expression = stringy.split() # Create expression as list of characters in string
+
+    for token in expression:
+        if token in "+-/*":
+            # Maintain correct left/right operand order
+            b = s.pop() # Last element is second in expression 
+            a = s.pop() # Fisrt element in expression
+            # Handle every operator
+            if token == "+":
+                s.push(a + b)
+            elif token == "-":
+                s.push(a - b)
+            elif token == "*":
+                s.push(a * b)
+            elif token == "/":
+                if b == 0: # Handle division by 0
+                    return ("Division by zero")
+                s.push(a / b)
+        else:
+            s.push(float(token)) # Convert numbers to float when pushing them
+
+    return s.pop()
+
+with open("data/p3_eval_postfix.csv", "r") as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(f"Input: {row[0]}\nExpected output: {row[1]}\nCalculation: {postfixExpressionCalculator(row[0])}")
 
