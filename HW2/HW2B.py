@@ -164,7 +164,7 @@ class Stack:
         return s.pop()
 
 
-# Main Function. Do not edit the code below
+# Main Function. Do not edit the code below. Only added data/ to with open paramter to open files
 if __name__ == "__main__":
     homework2 = HomeWork2()
 
@@ -187,7 +187,7 @@ if __name__ == "__main__":
 
     print("\nRUNNING TEST CASES FOR PROBLEM 2")
     testcases = []
-    with open('data/p2_traversals.csv', 'r') as f:
+    with open('data/p2_traversals.csv', 'r') as f: 
         testcases = list(csv.reader(f))
 
     for i, row in enumerate(testcases, 1):
@@ -228,3 +228,34 @@ if __name__ == "__main__":
         except ZeroDivisionError:
             assert expected == "DIVZERO", f"Test {idx} unexpected division by zero"
             print(f"Test case {idx} passed (division by zero handled)")
+
+# Problem 4: Edge case tests. Main crashes program by trying to cast expected to int (line 224); some edge cases where expected = Error though are handled down here. 
+print("\nRUNNING EDGE CASE TESTS FOR PROBLEM 4")
+s = Stack()
+edge_cases = [
+    ("", "Error"), # Empty expression
+    ("3 4", "Error"), # Too many operands
+    ("3 +", "Error"), # Insufficient operands
+    ("3 a +", "Error"), # Invalid token
+    ("-3 4 +", 1.0), # Negative number. No issue here too cause format is fine
+    ("999999999999999 1 +", 1000000000000000.0), # Large numbers. (No issue for python)
+    ("5 0 /", "DIVZERO"), # Division by zero
+]
+
+for idx, (expr, expected) in enumerate(edge_cases, 1):
+    try:
+        result = s.evaluatePostfix(expr) 
+        if expected == "DIVZERO": # If exception not thrown and expected = DIVZERO we have a problem
+            print(f"Edge case {idx} failed (expected division by zero)") 
+        else:
+            assert result == expected, f"Edge case {idx} failed: {result} != {expected}" # Else assert case
+            print(f"Edge case {idx} passed")
+    except ZeroDivisionError: 
+        if expected == "DIVZERO": # Exception thrown then we don't have a problem
+            print(f"Edge case {idx} passed (division by zero handled)")
+        else:
+            print(f"Edge case {idx} failed (unexpected division by zero)") # We have a scarier problem
+    except ValueError as e: # Value error exceptions
+            print(f"Edge case {idx} passed: {str(e)}")
+    except IndexError as e: # Index error exception (only one we catch here)
+            print(f"Edge case {idx} passed: {str(e)}")
