@@ -147,7 +147,7 @@ class Stack:
                             raise ZeroDivisionError("Division by zero")
                         s.push(a / b) # No division by 0 so move on
                 except IndexError: # If not enough operants IndexError is thrown by pop operations
-                    raise ValueError("Not enough operands") # Raise error
+                    raise IndexError("Not enough operands") # Raise error
             else:
                 try:
                     s.push(float(token)) # Convert numbers to float when pushing them. No need to worry about negative numbers they simply get evaluated cause Python
